@@ -1,52 +1,17 @@
-const { Model, DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
+const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 
-class User extends Model {
-  checkpassword(password) {
-    return bcrypt.compareSync(password, this.password);
-  }
-}
-User.init(
+class Comment extends Model {}
+Comment.init(
   {
-    id: {
+    body: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    userName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [4],
-      },
     },
   },
   {
-    hooks: {
-      // set up beforeCreate lifecycle "hook" functionality
-      async beforeCreate(newUserData) {
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        return newUserData;
-      },
-      // set up beforeUpdate lifecycle "hook" functionality
-      async beforeUpdate(updatedUserData) {
-        updatedUserData.password = await bcrypt.hash(
-          updatedUserData.password,
-          10
-        );
-        return updatedUserData;
-      },
-    },
     sequelize,
-    timestamps: false,
-    freezeTableName: true,
-    underscored: true,
-    modelName: "User",
   }
 );
+
+module.exports = Comment;
