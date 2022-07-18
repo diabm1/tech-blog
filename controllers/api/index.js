@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const categoryRoutes = require('./home-routes');
+const categoryRoutes = require('../home-routes');
 const productRoutes = require('./product-routes');
 const tagRoutes = require('./tag-routes');
 
