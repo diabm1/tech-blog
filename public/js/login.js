@@ -1,8 +1,8 @@
 const loginFormHandler = async function (e) {
   e.preventDefault();
 
-  const usernameEl = document.querySelector("#username-input-login").value;
-  const passwordEl = document.querySelector("#password-input-login").value;
+  const usernameEl = document.querySelector("#username-input-login");
+  const passwordEl = document.querySelector("#password-input-login");
 
   fetch("/api/user/login", {
     method: "post",
@@ -22,4 +22,4 @@ const loginFormHandler = async function (e) {
 
 document
   .querySelector("#login-form")
-  .addEventListener("submit", commentFormHandler);
+  .addEventListener("submit", loginFormHandler);
