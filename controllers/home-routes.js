@@ -1,77 +1,61 @@
 const router = require("express").Router();
-const { Category, Product } = require("../models");
+const { Post, Comment, User } = require("../models/");
 
-// The `/api/categories` endpoint
-
+// get all posts from homepage
 router.get("/", (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
-  Category.findAll({
-    include: [Product],
+  Post.findAll({
+    include: [User],
   })
-    .then((categories) => res.json(categories))
+    .then((postData) => {
+      const posts = postData.map((post) => post.get({ plain: true }));
+
+      res.render("all-posts", { posts });
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).json(err);
     });
 });
 
-router.get("/:id", (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
-  Category.findOne({
-    where: {
-      id: req.params.id,
-    },
-    include: [Product],
+// get a single post
+router.get("/post/:id", (req, res) => {
+  Post.findByPk(req.params.id, {
+    include: [
+      User,
+      {
+        model: Comment,
+        include: [User],
+      },
+    ],
   })
-    .then((category) => res.json(category))
+    .then((postData) => {
+      if (postData) {
+        const post = postData.get({ plain: true });
+
+        res.render("single-post", { post });
+      } else {
+        res.status(404).end();
+      }
+    })
     .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
+      res.status(500).json(err);
     });
 });
 
-router.post("/", (req, res) => {
-  // create a new category
-  Category.create(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((category) => res.status(200).json(category))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+router.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("login");
 });
 
-router.put("/:id", (req, res) => {
-  // update a category by its `id` value
-  Category.update(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((category) => res.status(200).json(category))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
-});
-
-router.delete("/:id", (req, res) => {
-  // delete a category by its `id` value
-  Category.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((category) => res.status(200).json(category))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+router.get("/signup", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("signup");
 });
 
 module.exports = router;
