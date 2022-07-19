@@ -6,13 +6,13 @@ router.post("/", (req, res) => {
     username: req.body.username,
     password: req.body.password,
   })
-    .then((dbUserData) => {
+    .then((userData) => {
       req.session.save(() => {
-        req.session.userId = dbUserData.id;
-        req.session.username = dbUserData.username;
+        req.session.userId = userData.id;
+        req.session.username = userData.username;
         req.session.loggedIn = true;
 
-        res.json(dbUserData);
+        res.json(userData);
       });
     })
     .catch((err) => {
@@ -26,13 +26,13 @@ router.post("/login", (req, res) => {
     where: {
       username: req.body.username,
     },
-  }).then((dbUserData) => {
-    if (!dbUserData) {
+  }).then((userData) => {
+    if (!userData) {
       res.status(400).json({ message: "No user account found!" });
       return;
     }
 
-    const validPassword = dbUserData.checkPassword(req.body.password);
+    const validPassword = userData.checkPassword(req.body.password);
 
     if (!validPassword) {
       res.status(400).json({ message: "Incorrect password!" });
@@ -41,10 +41,10 @@ router.post("/login", (req, res) => {
 
     req.session.save(() => {
       req.session.userId = dvUserData.id;
-      req.session.username = dbUserData.username;
+      req.session.username = userData.username;
       req.session.loggedIn = true;
 
-      res.json({ user: dbUserData, message: "You're logged in now!" });
+      res.json({ user: userData, message: "You're logged in now!" });
     });
   });
 });
@@ -65,12 +65,12 @@ router.delete("/user/:id", (req, res) => {
       id: req.params.id,
     },
   })
-    .then((dbUserData) => {
-      if (!dbUserData) {
+    .then((userData) => {
+      if (!userData) {
         res.status(404).json({ message: "No user found with this id" });
         return;
       }
-      res.json(dbUserData);
+      res.json(userData);
     })
     .catch((err) => {
       console.log(err);
