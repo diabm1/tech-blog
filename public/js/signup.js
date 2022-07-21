@@ -3,19 +3,20 @@ const signupFormHandler = async function (e) {
 
   const usernameEl = document.querySelector("#username-input-signup").value;
   const passwordEl = document.querySelector("#password-input-signup").value;
-
+  console.log(usernameEl);
   fetch("/api/user", {
     method: "post",
     body: JSON.stringify({
-      username: usernameEl.value,
-      password: passwordEl.value,
+      username: usernameEl,
+      password: passwordEl,
     }),
     headers: {
       "Content-Type": "application/json",
     },
   })
     .then(function () {
-      document.location.replace("/dashboard");
+      console.log("are we here");
+      document.location.href = "/dashboard";
     })
     .catch((err) => console.log(err));
 };

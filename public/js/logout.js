@@ -9,4 +9,8 @@ function logout() {
     .catch((err) => console.log(err));
 }
 
-document.querySelector("#logout-link").addEventListener("click", logout);
+const logoutButton = document.querySelector("#logout-link");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", logout);
+}

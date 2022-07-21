@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const sequelize = require("../config/connection");
 
 class User extends Model {
-  checkpassword(password) {
+  checkPassword(password) {
     return bcrypt.compareSync(password, this.password);
   }
 }
@@ -15,7 +15,7 @@ User.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    userName: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
     },

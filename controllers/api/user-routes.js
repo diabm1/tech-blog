@@ -7,6 +7,7 @@ router.post("/", (req, res) => {
     password: req.body.password,
   })
     .then((userData) => {
+      console.log("userData", userData.id);
       req.session.save(() => {
         req.session.userId = userData.id;
         req.session.username = userData.username;
@@ -17,7 +18,7 @@ router.post("/", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status.json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -40,7 +41,7 @@ router.post("/login", (req, res) => {
     }
 
     req.session.save(() => {
-      req.session.userId = dvUserData.id;
+      req.session.userId = userData.id;
       req.session.username = userData.username;
       req.session.loggedIn = true;
 

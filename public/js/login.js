@@ -1,21 +1,25 @@
 const loginFormHandler = async function (e) {
   e.preventDefault();
 
-  const usernameEl = document.querySelector("#username-input-login");
-  const passwordEl = document.querySelector("#password-input-login");
+  const usernameEl = document.querySelector("#username-input-login").value;
+  const passwordEl = document.querySelector("#password-input-login").value;
 
   fetch("/api/user/login", {
     method: "post",
     body: JSON.stringify({
-      username: usernameEl.value,
-      password: passwordEl.value,
+      username: usernameEl,
+      password: passwordEl,
     }),
     headers: {
       "Content-Type": "application/json",
     },
   })
-    .then(function () {
-      document.location.replace("/dashboard");
+    .then(function (res) {
+      return res.json();
+    })
+    .then((data) => {
+      console.log("login data", data);
+      document.location.href = "/dashboard";
     })
     .catch((err) => console.log(err));
 };
